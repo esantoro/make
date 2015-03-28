@@ -29,6 +29,10 @@ this program.  If not, see <http://www.gnu.org/licenses/>.  */
 #endif
 #include "hash.h"
 
+/* External reference to job_slots (unsigned int) as defined in main.c */
+
+extern unsigned int job_slots ;
+
 /* Chain of all pattern-specific variables.  */
 
 static struct pattern_var *pattern_vars;
@@ -944,6 +948,8 @@ define_automatic_variables (void)
                          o_automatic, 1);
   define_variable_cname ("+D", "$(patsubst %/,%,$(patsubst %\\,%,$(dir $+)))",
                          o_automatic, 1);
+  define_variable_cname ("J" , job_slots, o_automatic, 1); 
+
 #else  /* not __MSDOS__, not WINDOWS32 */
   define_variable_cname ("@D", "$(patsubst %/,%,$(dir $@))", o_automatic, 1);
   define_variable_cname ("%D", "$(patsubst %/,%,$(dir $%))", o_automatic, 1);
@@ -952,6 +958,8 @@ define_automatic_variables (void)
   define_variable_cname ("?D", "$(patsubst %/,%,$(dir $?))", o_automatic, 1);
   define_variable_cname ("^D", "$(patsubst %/,%,$(dir $^))", o_automatic, 1);
   define_variable_cname ("+D", "$(patsubst %/,%,$(dir $+))", o_automatic, 1);
+  define_variable_cname ("J" , job_slots, o_automatic, 1); 
+
 #endif
   define_variable_cname ("@F", "$(notdir $@)", o_automatic, 1);
   define_variable_cname ("%F", "$(notdir $%)", o_automatic, 1);
@@ -960,6 +968,7 @@ define_automatic_variables (void)
   define_variable_cname ("?F", "$(notdir $?)", o_automatic, 1);
   define_variable_cname ("^F", "$(notdir $^)", o_automatic, 1);
   define_variable_cname ("+F", "$(notdir $+)", o_automatic, 1);
+  define_variable_cname ("J" , job_slots, o_automatic, 1); 
 }
 
 int export_all_variables;
