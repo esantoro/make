@@ -17,6 +17,7 @@ this program.  If not, see <http://www.gnu.org/licenses/>.  */
 #include "makeint.h"
 
 #include <assert.h>
+#include <stdio.h>
 
 #include "filedef.h"
 #include "dep.h"
@@ -820,6 +821,9 @@ define_automatic_variables (void)
   struct variable *v;
   char buf[200];
 
+  char job_slots_string[256] ;
+  sprintf(job_slots_string, "%d", job_slots);
+
   sprintf (buf, "%u", makelevel);
   define_variable_cname (MAKELEVEL_NAME, buf, o_env, 0);
 
@@ -932,6 +936,8 @@ define_automatic_variables (void)
   /* Define the magic D and F variables in terms of
      the automatic variables they are variations of.  */
 
+
+
 #if defined(__MSDOS__) || defined(WINDOWS32)
   /* For consistency, remove the trailing backslash as well as slash.  */
   define_variable_cname ("@D", "$(patsubst %/,%,$(patsubst %\\,%,$(dir $@)))",
@@ -948,7 +954,7 @@ define_automatic_variables (void)
                          o_automatic, 1);
   define_variable_cname ("+D", "$(patsubst %/,%,$(patsubst %\\,%,$(dir $+)))",
                          o_automatic, 1);
-  define_variable_cname ("J" , job_slots, o_automatic, 1); 
+  define_variable_cname ("#J" , job_slots_string, o_automatic, 1); 
 
 #else  /* not __MSDOS__, not WINDOWS32 */
   define_variable_cname ("@D", "$(patsubst %/,%,$(dir $@))", o_automatic, 1);
@@ -958,7 +964,7 @@ define_automatic_variables (void)
   define_variable_cname ("?D", "$(patsubst %/,%,$(dir $?))", o_automatic, 1);
   define_variable_cname ("^D", "$(patsubst %/,%,$(dir $^))", o_automatic, 1);
   define_variable_cname ("+D", "$(patsubst %/,%,$(dir $+))", o_automatic, 1);
-  define_variable_cname ("J" , job_slots, o_automatic, 1); 
+  define_variable_cname ("#J" , job_slots_string, o_automatic, 1); 
 
 #endif
   define_variable_cname ("@F", "$(notdir $@)", o_automatic, 1);
@@ -968,7 +974,7 @@ define_automatic_variables (void)
   define_variable_cname ("?F", "$(notdir $?)", o_automatic, 1);
   define_variable_cname ("^F", "$(notdir $^)", o_automatic, 1);
   define_variable_cname ("+F", "$(notdir $+)", o_automatic, 1);
-  define_variable_cname ("J" , job_slots, o_automatic, 1); 
+  define_variable_cname ("#J" , job_slots_string, o_automatic, 1); 
 }
 
 int export_all_variables;
